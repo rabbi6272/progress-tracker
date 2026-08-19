@@ -43,4 +43,9 @@ app-example
 /ios
 /android
 
-yarn.lock
+
+.claude/
+.vscode/
+
+AGENTS.MD
+CLAUDE.MD

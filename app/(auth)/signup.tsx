@@ -9,13 +9,14 @@ import {
   View,
 } from 'react-native';
 
-import { ThemedText } from '@/components/themed-text';
+import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/InputField';
 import { signUp } from '@/services/auth';
-import { createProfile } from '@/services/profile';
-import { createSemester } from '@/services/semesters';
 import { FirebaseError } from '@/services/FirebaseError';
+import { createProfile } from '@/services/Profile';
+import { createSemester } from '@/services/semesters';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SignupScreen() {
   const [fullName, setFullName] = useState('');
@@ -46,52 +47,54 @@ export default function SignupScreen() {
     <KeyboardAvoidingView
       style={styles.flex}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <ScrollView contentContainerStyle={styles.wrapper} keyboardShouldPersistTaps="handled">
-        <View style={styles.container}>
-          <ThemedText type="title" style={styles.title}>
-            Create account
-          </ThemedText>
-          <ThemedText type="subtitle" style={styles.subtitle}>
-            Start tracking your academics
-          </ThemedText>
+      <SafeAreaView style={styles.flex} edges={['top']}>
+        <ScrollView contentContainerStyle={styles.wrapper} keyboardShouldPersistTaps="handled">
+          <View style={styles.container}>
+            <ThemedText type="title" style={styles.title}>
+              Create account
+            </ThemedText>
+            <ThemedText type="subtitle" style={styles.subtitle}>
+              Start tracking your academics
+            </ThemedText>
 
-          <Field
-            required
-            label="Full name"
-            placeholder="Your name"
-            autoComplete="name"
-            value={fullName}
-            onChangeText={setFullName}
-          />
-          <Field
-            required
-            label="Email"
-            placeholder="you@example.com"
-            autoCapitalize="none"
-            autoComplete="email"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-          />
-          <Field
-            required
-            label="Password"
-            placeholder="At least 6 characters"
-            secureTextEntry
-            autoComplete="password-new"
-            value={password}
-            onChangeText={setPassword}
-          />
+            <Field
+              required
+              label="Full name"
+              placeholder="Your name"
+              autoComplete="name"
+              value={fullName}
+              onChangeText={setFullName}
+            />
+            <Field
+              required
+              label="Email"
+              placeholder="you@example.com"
+              autoCapitalize="none"
+              autoComplete="email"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
+            />
+            <Field
+              required
+              label="Password"
+              placeholder="At least 6 characters"
+              secureTextEntry
+              autoComplete="password-new"
+              value={password}
+              onChangeText={setPassword}
+            />
 
-          {error ? <Text style={styles.error}>{error}</Text> : null}
+            {error ? <Text style={styles.error}>{error}</Text> : null}
 
-          <Button title="Sign Up" onPress={handleSubmit} loading={loading} />
+            <Button title="Sign Up" onPress={handleSubmit} loading={loading} />
 
-          <ThemedText style={styles.footer}>
-            Already have an account? <Link href="/login" style={styles.link}>Sign in</Link>
-          </ThemedText>
-        </View>
-      </ScrollView>
+            <ThemedText style={styles.footer}>
+              Already have an account? <Link href="/login" style={styles.link}>Sign in</Link>
+            </ThemedText>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 }

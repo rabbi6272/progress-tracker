@@ -9,12 +9,13 @@ import {
   View,
 } from 'react-native';
 
-import { ThemedText } from '@/components/themed-text';
+import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/InputField';
 import { useAuth } from '@/providers/auth-provider';
 import { signIn } from '@/services/auth';
 import { FirebaseError } from '@/services/FirebaseError';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
   const { user } = useAuth();
@@ -45,44 +46,46 @@ export default function LoginScreen() {
     <KeyboardAvoidingView
       style={styles.flex}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <ScrollView contentContainerStyle={styles.wrapper} keyboardShouldPersistTaps="handled">
-        <View style={styles.container}>
-          <ThemedText type="title" style={styles.title}>
-            Welcome back
-          </ThemedText>
-          <ThemedText type="subtitle" style={styles.subtitle}>
-            Sign in to track your progress
-          </ThemedText>
+      <SafeAreaView style={styles.flex} edges={['top']}>
+        <ScrollView contentContainerStyle={styles.wrapper} keyboardShouldPersistTaps="handled">
+          <View style={styles.container}>
+            <ThemedText type="title" style={styles.title}>
+              Welcome back
+            </ThemedText>
+            <ThemedText type="subtitle" style={styles.subtitle}>
+              Sign in to track your progress
+            </ThemedText>
 
-          <Field
-            required
-            label="Email"
-            placeholder="you@example.com"
-            autoCapitalize="none"
-            autoComplete="email"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-          />
-          <Field
-            required
-            label="Password"
-            placeholder="••••••••"
-            secureTextEntry
-            autoComplete="password"
-            value={password}
-            onChangeText={setPassword}
-          />
+            <Field
+              required
+              label="Email"
+              placeholder="you@example.com"
+              autoCapitalize="none"
+              autoComplete="email"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
+            />
+            <Field
+              required
+              label="Password"
+              placeholder="••••••••"
+              secureTextEntry
+              autoComplete="password"
+              value={password}
+              onChangeText={setPassword}
+            />
 
-          {error && <Text style={styles.error}>{error}</Text>}
+            {error && <Text style={styles.error}>{error}</Text>}
 
-          <Button title="Sign In" onPress={handleSubmit} loading={loading} />
+            <Button title="Sign In" onPress={handleSubmit} loading={loading} />
 
-          <ThemedText style={styles.footer}>
-            Don&apos;t have an account? <Link href="/signup" style={styles.link}>Sign up</Link>
-          </ThemedText>
-        </View>
-      </ScrollView>
+            <ThemedText style={styles.footer}>
+              Don&apos;t have an account? <Link href="/signup" style={styles.link}>Sign up</Link>
+            </ThemedText>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 }
