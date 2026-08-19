@@ -5,7 +5,7 @@ type ButtonProps = {
   onPress: () => void;
   loading?: boolean;
   disabled?: boolean;
-  variant?: 'primary' | 'ghost' | 'rounded';
+  variant?: 'primary' | 'ghost';
   style?: ViewStyle;
 };
 
