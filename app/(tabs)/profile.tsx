@@ -10,7 +10,7 @@ import { Colors } from '@/constants/theme';
 import { useProfile } from '@/hooks/useUserProfile';
 import { gpaRange, required } from '@/lib/validate';
 import { useAuth } from '@/providers/auth-provider';
-import { signOut } from '@/services/auth';
+import { signOut } from '@/services/Auth';
 
 export default function ProfileScreen() {
   const { user } = useAuth();

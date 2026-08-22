@@ -13,7 +13,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/InputField';
 import { useAuth } from '@/providers/auth-provider';
-import { signIn } from '@/services/auth';
+import { signIn } from '@/services/Auth';
 import { FirebaseError } from '@/services/FirebaseError';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

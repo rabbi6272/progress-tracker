@@ -10,12 +10,6 @@ import { QueryProvider } from '@/providers/query-provider';
 
 void SplashScreen.preventAutoHideAsync();
 
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
-
-
-
 function RootNavigator() {
   const { user, initializing } = useAuth();
   const [loaded, error] = useFonts({
@@ -58,6 +52,7 @@ function RootNavigator() {
         />
         <Stack.Screen name="target/new" options={{ title: 'New Target', presentation: 'modal' }} />
       </Stack.Protected>
+
       <Stack.Protected guard={!user}>
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       </Stack.Protected>
@@ -66,7 +61,6 @@ function RootNavigator() {
 }
 
 export default function RootLayout() {
-
   return (
     <>
       <QueryProvider>
