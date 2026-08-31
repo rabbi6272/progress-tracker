@@ -2,6 +2,7 @@
 
 # dependencies
 node_modules/
+yarn.lock
 
 # Expo
 .expo/
@@ -42,3 +43,10 @@ app-example
 # generated native folders
 /ios
 /android
+
+
+.claude/
+.vscode/
+
+AGENTS.MD
+CLAUDE.MD

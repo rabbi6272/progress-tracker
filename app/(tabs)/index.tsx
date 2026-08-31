@@ -1,98 +1,183 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import { useQueries } from '@tanstack/react-query';
 import { Link } from 'expo-router';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { CourseCard } from '@/components/CourseCard';
+import { ThemedText } from '@/components/ThemedText';
+import { ProgressBar } from '@/components/ui/ProgressBar';
+import { useCourses } from '@/hooks/use-courses';
+import { useRoutines } from '@/hooks/use-routines';
+import { useTargets } from '@/hooks/use-targets';
+import { useProfile } from '@/hooks/useUserProfile';
+import { DAY_NAMES } from '@/lib/constants';
+import { parseTime } from '@/lib/validate';
+import { useAuth } from '@/providers/auth-provider';
+import { listAssessments } from '@/services/assessments';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const { user } = useAuth();
+  const { profileData } = useProfile();
+  const { courses } = useCourses();
+  const { slots } = useRoutines();
+  const { targets } = useTargets();
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
+  const progressQueries = useQueries({
+    queries: courses.map((course) => ({
+      queryKey: ['assessments', course.id],
+      queryFn: () => (user ? listAssessments(user.uid, course.id) : []),
+      enabled: !!user && !!course.id,
+    })),
+  });
+
+  const firstName = profileData?.fullName?.split(' ')[0] ?? 'Student';
+
+  const nextClass = findNextClass(slots);
+
+  const topTargets = targets.slice(0, 3);
+
+  return (
+    <SafeAreaView style={styles.safe} edges={['top']}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <ThemedText type="title" style={styles.greeting}>
+          Hi, {firstName}
         </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
+        <ThemedText style={styles.subGreeting}>
+          {profileData?.currentSemester || 'Track your CT marks, routine, and targets.'}
         </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+
+        {nextClass ? (
+          <View style={styles.nextClass}>
+            <ThemedText style={styles.label}>NEXT CLASS</ThemedText>
+            <ThemedText type="subtitle" style={styles.nextClassTitle}>
+              {nextClass.courseLabel}
+            </ThemedText>
+            <ThemedText style={styles.nextClassMeta}>
+              {nextClass.startTime} – {nextClass.endTime}
+              {nextClass.room ? ` · ${nextClass.room}` : ''}
+            </ThemedText>
+          </View>
+        ) : null}
+
+        <View style={styles.sectionRow}>
+          <ThemedText type="subtitle">CT Progress</ThemedText>
+          <Link href="/courses" style={styles.seeAll}>See all</Link>
+        </View>
+
+        {courses.length === 0 ? (
+          <ThemedText style={styles.meta}>No courses yet. Add one from the Courses tab.</ThemedText>
+        ) : (
+          courses.slice(0, 3).map((course, index) => (
+            <CourseCard key={course.id} course={course} assessments={progressQueries[index]?.data} />
+          ))
+        )}
+
+        {topTargets.length > 0 ? (
+          <>
+            <View style={styles.sectionRow}>
+              <ThemedText type="subtitle">Targets</ThemedText>
+              <Link href="/targets" style={styles.seeAll}>See all</Link>
+            </View>
+            {topTargets.map((target) => {
+              const percent =
+                target.targetValue > 0
+                  ? Math.round((target.currentValue / target.targetValue) * 100)
+                  : 0;
+              return (
+                <View key={target.id} style={styles.target}>
+                  <View style={styles.targetRow}>
+                    <ThemedText type="defaultSemiBold">{target.title}</ThemedText>
+                    <ThemedText style={styles.meta}>{percent}%</ThemedText>
+                  </View>
+                  <ProgressBar percent={Math.min(100, Math.max(0, percent))} />
+                </View>
+              );
+            })}
+          </>
+        ) : null}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
+function findNextClass(slots: ReturnType<typeof useRoutines>['slots']) {
+  if (slots.length === 0) return null;
+  const now = new Date();
+  const today = now.getDay();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+  for (let offset = 0; offset < 7; offset++) {
+    const dayIndex = (today + offset) % 7;
+    const daySlots = slots
+      .filter((s) => s.dayOfWeek === dayIndex)
+      .sort((a, b) => parseTime(a.startTime) - parseTime(b.startTime));
+    const match = daySlots.find((s) => {
+      if (offset === 0) return parseTime(s.startTime) >= nowMinutes;
+      return true;
+    });
+    if (match) {
+      return { ...match, day: DAY_NAMES[dayIndex], offset };
+    }
+  }
+  return null;
+}
+
 const styles = StyleSheet.create({
-  titleContainer: {
+  safe: {
+    flex: 1,
+  },
+  content: {
+    padding: 20,
+  },
+  greeting: {
+    marginBottom: 2,
+  },
+  subGreeting: {
+    opacity: 0.7,
+    marginBottom: 20,
+  },
+  nextClass: {
+    backgroundColor: '#0a7ea4',
+    borderRadius: 14,
+    padding: 16,
+    gap: 4,
+    marginBottom: 24,
+  },
+  label: {
+    color: '#e6f4fe',
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 1,
+  },
+  nextClassTitle: {
+    color: '#fff',
+  },
+  nextClassMeta: {
+    color: '#e6f4fe',
+    fontSize: 14,
+  },
+  meta: {
+    opacity: 0.6,
+    fontSize: 14,
+  },
+  sectionRow: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 8,
+    marginBottom: 12,
+    marginTop: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  seeAll: {
+    color: '#0a7ea4',
+    fontWeight: '600',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  target: {
+    marginBottom: 12,
+    gap: 6,
+  },
+  targetRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
