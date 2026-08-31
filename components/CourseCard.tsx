@@ -14,13 +14,12 @@ type CourseCardProps = {
 
 export function CourseCard({ course, assessments = [] }: CourseCardProps) {
   const router = useRouter();
-  const tint = Colors.tint;
   const progress = courseProgress(assessments);
 
   return (
     <Pressable
       onPress={() => router.push(`/course/${course.id}`)}
-      style={({ pressed }) => [styles.card, { borderColor: tint }, pressed && styles.pressed]}>
+      style={({ pressed }) => [styles.card, { borderColor: Colors.icon }, pressed && styles.pressed]}>
       <View style={styles.row}>
         <ThemedText type="subtitle">{course.code}</ThemedText>
         <ThemedText style={styles.credits}>{course.credits} cr</ThemedText>
@@ -29,7 +28,7 @@ export function CourseCard({ course, assessments = [] }: CourseCardProps) {
         {course.title}
       </ThemedText>
       <View style={styles.progressRow}>
-        <ProgressBar percent={progress.percent} />
+        {progress.max > 0 && <ProgressBar percent={progress.percent} />}
         <ThemedText style={styles.percent}>
           {progress.max > 0 ? `${progress.obtained}/${progress.max}` : 'No marks yet'}
         </ThemedText>
@@ -41,10 +40,10 @@ export function CourseCard({ course, assessments = [] }: CourseCardProps) {
 const styles = StyleSheet.create({
   card: {
     borderWidth: 1,
+    borderLeftWidth: 5,
     borderRadius: 14,
     padding: 16,
-    marginBottom: 12,
-    gap: 6,
+    marginBottom: 10,
   },
   pressed: {
     opacity: 0.7,
@@ -62,10 +61,11 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   progressRow: {
+    maxWidth: '60%',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    marginTop: 4,
+    marginTop: 2,
   },
   percent: {
     fontSize: 13,
