@@ -38,7 +38,8 @@ export function Button({ title, onPress, loading, disabled, variant = 'primary',
 const styles = StyleSheet.create({
   base: {
     borderRadius: 10,
-    paddingVertical: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
