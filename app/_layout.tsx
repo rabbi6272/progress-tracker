@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from 'react-native';
 import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
@@ -40,17 +40,12 @@ function RootNavigator() {
     <Stack>
       <Stack.Protected guard={!!user}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="course/[id]" options={{ title: 'Course' }} />
-        <Stack.Screen name="course/new" options={{ title: 'New Course', presentation: 'modal' }} />
-        <Stack.Screen
-          name="assessment/new"
-          options={{ title: 'Add Assessment', presentation: 'modal' }}
-        />
-        <Stack.Screen
-          name="routine/new"
-          options={{ title: 'New Class Slot', presentation: 'modal' }}
-        />
-        <Stack.Screen name="target/new" options={{ title: 'New Target', presentation: 'modal' }} />
+        <Stack.Screen name="course/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="course/new" options={{ headerShown: false }} />
+        <Stack.Screen name="assessment/new" options={{ headerShown: false }} />
+        <Stack.Screen name="routine/new" options={{ headerShown: false }} />
+        <Stack.Screen name="target/new" options={{ headerShown: false }} />
+        <Stack.Screen name="profile/edit" options={{ headerShown: false }} />
       </Stack.Protected>
 
       <Stack.Protected guard={!user}>
@@ -68,7 +63,7 @@ export default function RootLayout() {
           <RootNavigator />
         </AuthProvider>
       </QueryProvider>
-      <StatusBar style="auto" />
+      <StatusBar barStyle={'dark-content'} />
     </>
   );
 }
