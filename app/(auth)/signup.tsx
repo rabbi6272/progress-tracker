@@ -15,7 +15,7 @@ import { Field } from '@/components/ui/InputField';
 import { signUp } from '@/services/Auth';
 import { FirebaseError } from '@/services/FirebaseError';
 import { createProfile } from '@/services/Profile';
-import { createSemester } from '@/services/semesters';
+import { createSemester } from '@/services/Semesters';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SignupScreen() {

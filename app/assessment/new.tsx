@@ -6,7 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
 import { Field } from '@/components/ui/InputField';
-import { useAssessments } from '@/hooks/use-assessments';
+import { useAssessments } from '@/hooks/useAssessments';
 import { ASSESSMENT_TYPES, ASSESSMENT_TYPE_LABELS } from '@/lib/constants';
 import type { AssessmentType } from '@/lib/types';
 import { clampMarks, isNumeric, required } from '@/lib/validate';

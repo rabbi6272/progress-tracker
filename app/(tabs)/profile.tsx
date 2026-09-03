@@ -29,7 +29,7 @@ export default function ProfileScreen() {
       setFullName(profileData.fullName || '');
       setUniversity(profileData.university || '');
       setDepartment(profileData.department || '');
-      setCurrentSemester(profileData.currentSemester || '');
+      setCurrentSemester(profileData.currentSemesterId || '');
       setTargetCgpa(profileData.targetCgpa ? String(profileData.targetCgpa) : '');
     }
   }, [profileData]);
@@ -53,7 +53,7 @@ export default function ProfileScreen() {
       fullName: fullName.trim(),
       university: university.trim(),
       department: department.trim(),
-      currentSemester: currentSemester.trim(),
+      currentSemesterId: currentSemester.trim(),
       ...(targetCgpa.trim() ? { targetCgpa: gpa } : {}),
     });
     ToastAndroid.show('Profile updated', 2000);

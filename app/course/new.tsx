@@ -6,8 +6,8 @@ import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
 import { Field } from '@/components/ui/InputField';
-import { useCourses } from '@/hooks/use-courses';
-import { useSemesters } from '@/hooks/use-semesters';
+import { useCourses } from '@/hooks/useCourses';
+import { useSemesters } from '@/hooks/useSemesters';
 import { isNumeric, required } from '@/lib/validate';
 
 export default function NewCourseScreen() {

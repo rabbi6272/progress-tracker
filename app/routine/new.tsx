@@ -6,8 +6,8 @@ import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
 import { Field } from '@/components/ui/InputField';
-import { useCourses } from '@/hooks/use-courses';
-import { useRoutines } from '@/hooks/use-routines';
+import { useCourses } from '@/hooks/useCourses';
+import { useRoutines } from '@/hooks/useRoutines';
 import { DAY_NAMES, DAY_SHORT_NAMES } from '@/lib/constants';
 import { isTime, parseTime } from '@/lib/validate';
 

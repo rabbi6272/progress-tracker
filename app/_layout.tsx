@@ -20,10 +20,6 @@ function RootNavigator() {
     'InterMedium': require('../assets/fonts/Inter-Medium.ttf'),
     'InterSemiBold': require('../assets/fonts/Inter-SemiBold.ttf'),
     'InterBold': require('../assets/fonts/Inter-Bold.ttf'),
-    'NunitoRegular': require('../assets/fonts/Nunito-Regular.ttf'),
-    'NunitoMedium': require('../assets/fonts/Nunito-Medium.ttf'),
-    'NunitoSemiBold': require('../assets/fonts/Nunito-SemiBold.ttf'),
-    'NunitoBold': require('../assets/fonts/Nunito-Bold.ttf'),
   });
 
   useEffect(() => {

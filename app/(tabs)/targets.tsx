@@ -6,7 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Colors } from '@/constants/theme';
-import { useTargets } from '@/hooks/use-targets';
+import { useTargets } from '@/hooks/useTargets';
 import { TARGET_TYPE_LABELS } from '@/lib/constants';
 import { clamp } from '@/lib/gpa';
 

@@ -4,7 +4,7 @@ export interface UserProfile {
   fullName: string;
   university: string;
   department: string;
-  currentSemester: string;
+  currentSemesterId: string;
   targetCgpa: number;
   createdAt?: number;
 }

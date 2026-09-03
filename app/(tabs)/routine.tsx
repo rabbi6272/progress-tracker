@@ -7,7 +7,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { Chip } from '@/components/ui/Chip';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
-import { useRoutines } from '@/hooks/use-routines';
+import { useRoutines } from '@/hooks/useRoutines';
 import { DAY_NAMES, DAY_SHORT_NAMES } from '@/lib/constants';
 import { parseTime } from '@/lib/validate';
 

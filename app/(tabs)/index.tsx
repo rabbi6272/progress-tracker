@@ -6,14 +6,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { CourseCard } from '@/components/CourseCard';
 import { ThemedText } from '@/components/ThemedText';
 import { ProgressBar } from '@/components/ui/ProgressBar';
-import { useCourses } from '@/hooks/use-courses';
-import { useRoutines } from '@/hooks/use-routines';
-import { useTargets } from '@/hooks/use-targets';
+import { useCourses } from '@/hooks/useCourses';
+import { useRoutines } from '@/hooks/useRoutines';
+import { useTargets } from '@/hooks/useTargets';
 import { useProfile } from '@/hooks/useUserProfile';
 import { DAY_NAMES } from '@/lib/constants';
 import { parseTime } from '@/lib/validate';
 import { useAuth } from '@/providers/auth-provider';
-import { listAssessments } from '@/services/assessments';
+import { listAssessments } from '@/services/Assessments';
 
 export default function HomeScreen() {
   const { user } = useAuth();
@@ -43,7 +43,7 @@ export default function HomeScreen() {
           Hi, {firstName}
         </ThemedText>
         <ThemedText style={styles.subGreeting}>
-          {profileData?.currentSemester || 'Track your CT marks, routine, and targets.'}
+          {profileData?.currentSemesterId || 'Track your CT marks, routine, and targets.'}
         </ThemedText>
 
         {nextClass ? (

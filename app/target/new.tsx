@@ -6,7 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
 import { Field } from '@/components/ui/InputField';
-import { useTargets } from '@/hooks/use-targets';
+import { useTargets } from '@/hooks/useTargets';
 import { MAX_GPA, TARGET_TYPES, TARGET_TYPE_LABELS } from '@/lib/constants';
 import type { TargetType } from '@/lib/types';
 import { gpaRange, isNumeric, required } from '@/lib/validate';

@@ -6,9 +6,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { CourseCard } from '@/components/CourseCard';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/icon-symbol';
-import { useCourses } from '@/hooks/use-courses';
+import { useCourses } from '@/hooks/useCourses';
 import { useAuth } from '@/providers/auth-provider';
-import { listAssessments } from '@/services/assessments';
+import { listAssessments } from '@/services/Assessments';
 
 export default function CoursesScreen() {
   const { user } = useAuth();

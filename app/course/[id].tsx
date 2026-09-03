@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/Button';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Colors } from '@/constants/theme';
-import { useAssessments } from '@/hooks/use-assessments';
-import { useCourses } from '@/hooks/use-courses';
+import { useAssessments } from '@/hooks/useAssessments';
+import { useCourses } from '@/hooks/useCourses';
 import { ASSESSMENT_TYPE_LABELS } from '@/lib/constants';
 import { courseProgress, weightedPercent } from '@/lib/gpa';
 
