@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Progress Tracker",
-    "slug": "progress-tracker",
+    "name": "Lokkhyo",
+    "slug": "lokkyo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "progress-tracker",
+    "scheme": "lokkyo",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -18,7 +18,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.ProgressTracker"
+      "package": "com.anonymous.Lokkhyo"
     },
     "plugins": [
       "expo-router",

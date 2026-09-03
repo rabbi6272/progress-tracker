@@ -1,63 +1,23 @@
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, ToastAndroid, View } from 'react-native';
+import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/ui/Button';
-import { Field } from '@/components/ui/InputField';
 import { Colors } from '@/constants/theme';
+import { useSemesters } from '@/hooks/useSemesters';
 import { useProfile } from '@/hooks/useUserProfile';
-import { gpaRange, required } from '@/lib/validate';
 import { useAuth } from '@/providers/auth-provider';
 import { signOut } from '@/services/Auth';
 
 export default function ProfileScreen() {
   const { user } = useAuth();
-  const { profileData, isLoading, updateProfile } = useProfile();
+  const { profileData, isLoading } = useProfile();
+  const { semesters } = useSemesters();
   const router = useRouter();
 
-  const [fullName, setFullName] = useState('');
-  const [university, setUniversity] = useState('');
-  const [department, setDepartment] = useState('');
-  const [currentSemester, setCurrentSemester] = useState('');
-  const [targetCgpa, setTargetCgpa] = useState('');
-  const [errors, setErrors] = useState<Record<string, string | null>>({});
-
-  useEffect(() => {
-    if (profileData) {
-      setFullName(profileData.fullName || '');
-      setUniversity(profileData.university || '');
-      setDepartment(profileData.department || '');
-      setCurrentSemester(profileData.currentSemesterId || '');
-      setTargetCgpa(profileData.targetCgpa ? String(profileData.targetCgpa) : '');
-    }
-  }, [profileData]);
-
-  const hydrated = profileData !== undefined;
-
-  const handleSave = async () => {
-    const nextErrors: Record<string, string | null> = {
-      fullName: required(fullName, 'Full name'),
-    };
-    const gpa = Number(targetCgpa);
-    if (targetCgpa.trim()) {
-      nextErrors.targetCgpa = Number.isNaN(gpa) ? 'Target CGPA must be a number.' : gpaRange(gpa);
-    } else {
-      nextErrors.targetCgpa = null;
-    }
-    setErrors(nextErrors);
-    if (Object.values(nextErrors).some(Boolean)) return;
-
-    await updateProfile.mutateAsync({
-      fullName: fullName.trim(),
-      university: university.trim(),
-      department: department.trim(),
-      currentSemesterId: currentSemester.trim(),
-      ...(targetCgpa.trim() ? { targetCgpa: gpa } : {}),
-    });
-    ToastAndroid.show('Profile updated', 2000);
-  };
+  const currentSemester = semesters.find((s) => s.id === profileData?.currentSemesterId);
+  const displayName = profileData?.fullName || 'Student';
 
   const handleSignOut = () => {
     Alert.alert('Sign out', 'Are you sure?', [
@@ -66,95 +26,58 @@ export default function ProfileScreen() {
     ]);
   };
 
-  const displayName = fullName || profileData?.fullName || 'Student';
-  const displayCgpa = targetCgpa || (profileData?.targetCgpa ? String(profileData.targetCgpa) : '');
+  if (isLoading) {
+    return (
+      <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} edges={['top']}>
+        <View style={{ alignItems: 'center', gap: 12 }}>
+          <ActivityIndicator size="large" color={Colors.tint} />
+          <ThemedText style={styles.loadingText}>Loading profile…</ThemedText>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.safe}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <SafeAreaView style={styles.safe} edges={['top']}>
-        <ScrollView contentContainerStyle={styles.wrapper} keyboardShouldPersistTaps="handled" >
-          <View style={styles.container}>
-            <View style={styles.header}>
-              <ThemedText type="title">{displayName}</ThemedText>
-              <ThemedText style={styles.email}>{user?.email}</ThemedText>
-            </View>
+    <SafeAreaView style={{ flex: 1 }} edges={['top']}>
+      <View style={{ flex: 1, padding: 16, backgroundColor: '#f1f1f1', justifyContent: 'center' }}>
+        <View style={styles.card}>
+          <View style={styles.header}>
+            <ThemedText type="title">{displayName}</ThemedText>
+            <ThemedText style={styles.email}>{user?.email}</ThemedText>
+          </View>
 
-            {isLoading && !hydrated ? (
-              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                <ActivityIndicator size="large" color={Colors.tint} />
-                <ThemedText style={styles.loading}>Loading profile…</ThemedText>
-              </View>
-            ) : (
-              <>
-                <Field
-                  label="Full name"
-                  placeholder="Your name"
-                  value={fullName}
-                  onChangeText={setFullName}
-                  error={errors.fullName}
-                />
-                <Field
-                  label="University"
-                  placeholder="Your university"
-                  value={university}
-                  onChangeText={setUniversity}
-                />
-                <Field
-                  label="Department"
-                  placeholder="e.g. Computer Science & Engineering"
-                  value={department}
-                  onChangeText={setDepartment}
-                />
-                <Field
-                  label="Current semester"
-                  placeholder="e.g. Semester 3-1"
-                  value={currentSemester}
-                  onChangeText={setCurrentSemester}
-                />
-                <Field
-                  label="Target CGPA"
-                  placeholder="e.g. 3.75"
-                  keyboardType="numeric"
-                  value={displayCgpa}
-                  onChangeText={setTargetCgpa}
-                  error={errors.targetCgpa}
-                />
-
-                <Button
-                  title="Save Changes"
-                  onPress={handleSave}
-                  loading={updateProfile.isPending}
-                  disabled={isLoading}
-                />
-              </>
-            )}
-
-            <Button title="Sign Out" variant="ghost" onPress={handleSignOut} style={styles.signOut} />
-            <Button
-              title="Back to Dashboard"
-              variant="ghost"
-              onPress={() => router.replace('/')}
+          <View style={styles.infoGrid}>
+            <InfoRow label="University" value={profileData?.university || '—'} />
+            <InfoRow label="Department" value={profileData?.department || '—'} />
+            <InfoRow label="Semester" value={currentSemester?.name || '—'} />
+            <InfoRow
+              label="Target CGPA"
+              value={profileData?.targetCgpa ? String(profileData.targetCgpa) : '—'}
             />
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+
+          <Button title="Edit Profile" onPress={() => router.push('/profile/edit')} />
+          <Button title="Sign Out" variant="ghost" onPress={handleSignOut} style={styles.signOut} />
+          <Button title="Back to Dashboard" variant="ghost" onPress={() => router.replace('/')} />
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <View style={styles.infoRow}>
+      <ThemedText style={styles.infoLabel}>{label}</ThemedText>
+      <ThemedText type="defaultSemiBold" style={styles.infoValue}>
+        {value}
+      </ThemedText>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-  },
-  wrapper: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    padding: 16,
-    backgroundColor: '#f1f1f1',
-  },
-  container: {
+  card: {
     backgroundColor: '#fff',
     borderRadius: 20,
     paddingHorizontal: 20,
@@ -173,11 +96,102 @@ const styles = StyleSheet.create({
   email: {
     opacity: 0.7,
   },
-  loading: {
-    marginVertical: 16,
-    textAlign: 'center',
+  loadingText: {
+    opacity: 0.8,
+  },
+  infoGrid: {
+    gap: 16,
+    marginBottom: 28,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e5e5',
+  },
+  infoLabel: {
+    opacity: 0.6,
+    fontSize: 15,
+  },
+  infoValue: {
+    fontSize: 15,
+    textAlign: 'right',
+    flex: 1,
+    marginLeft: 16,
+  },
+  section: {
+    marginBottom: 16,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  addText: {
+    color: Colors.tint,
+    fontWeight: '600',
+  },
+  semesterList: {
+    gap: 8,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  semesterRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  deleteBtn: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#fee2e2',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  deleteText: {
+    color: '#dc2626',
+    fontSize: 18,
+    fontWeight: '700',
+    lineHeight: 20,
+  },
+  emptyText: {
+    opacity: 0.5,
+    fontSize: 14,
+  },
+  actions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 12,
+    marginTop: 8,
   },
   signOut: {
     marginTop: 4,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 24,
+    width: '100%',
+    maxWidth: 400,
+  },
+  modalTitle: {
+    marginBottom: 16,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 12,
+    marginTop: 8,
   },
 });

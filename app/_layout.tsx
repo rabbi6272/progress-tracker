@@ -15,11 +15,9 @@ function RootNavigator() {
   const [loaded, error] = useFonts({
     'LatoRegular': require('../assets/fonts/Lato-Regular.ttf'),
     'LatoSemiBold': require('../assets/fonts/Lato-SemiBold.ttf'),
-    'LatoBold': require('../assets/fonts/Lato-Bold.ttf'),
     'InterRegular': require('../assets/fonts/Inter-Regular.ttf'),
     'InterMedium': require('../assets/fonts/Inter-Medium.ttf'),
-    'InterSemiBold': require('../assets/fonts/Inter-SemiBold.ttf'),
-    'InterBold': require('../assets/fonts/Inter-Bold.ttf'),
+    'InterSemiBold': require('../assets/fonts/Inter-SemiBold.ttf')
   });
 
   useEffect(() => {

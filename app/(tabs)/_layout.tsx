@@ -19,7 +19,7 @@ export default function TabLayout() {
         },
         tabBarButton: (props) => <HapticTab {...props} />,
         tabBarLabel(props) {
-          return <Text style={{ fontFamily: props.focused ? 'InterBold' : 'InterMedium', fontSize: 11, color: props.color, paddingTop: 2 }}>{props.children}</Text>;
+          return <Text style={{ fontFamily: props.focused ? 'InterSemiBold' : 'InterMedium', fontSize: 11, color: props.color, paddingTop: 2 }}>{props.children}</Text>;
         }
       }}>
       <Tabs.Screen

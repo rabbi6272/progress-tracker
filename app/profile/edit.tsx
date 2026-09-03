@@ -130,7 +130,7 @@ export default function ProfileInfoCard() {
 
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
-                <ThemedText type="defaultSemiBold">Current Semester</ThemedText>
+                <ThemedText style={{ paddingLeft: 8 }} type="defaultSemiBold">Current Semester</ThemedText>
                 <Pressable onPress={() => setModalVisible(true)}>
                   <ThemedText style={styles.addText}>+ Add</ThemedText>
                 </Pressable>
@@ -151,11 +151,6 @@ export default function ProfileInfoCard() {
                           activateSemester.mutateAsync(sem.id);
                         }}
                       />
-                      <Pressable
-                        onPress={() => handleDeleteSemester(sem.id, sem.name)}
-                        style={styles.deleteBtn}>
-                        <ThemedText style={styles.deleteText}>×</ThemedText>
-                      </Pressable>
                     </View>
                   ))}
                 </ScrollView>
@@ -281,8 +276,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   addText: {
+    fontFamily: 'LatoSemiBold',
     color: Colors.tint,
-    fontWeight: '600',
   },
   semesterList: {
     gap: 8,

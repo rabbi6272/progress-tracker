@@ -16,7 +16,7 @@ export function BackStep({ title, onBack }: { title: string; onBack?: () => void
 					{title}
 				</Text>
 
-				<View style={styles.spacer} />
+				{onBack && <View style={styles.spacer} />}
 			</View>
 		</View>
 	)
