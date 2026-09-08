@@ -12,7 +12,8 @@
     "build:apk": "npx expo prebuild --clean && npx eas build --profile production --platform android --local",
     "build:android": "npx expo prebuild --clean && npx eas build --profile production --platform android",
     "build:preview": "npx expo prebuild --clean && npx eas build --profile preview --platform android --local",
-    "build:ios": "npx expo prebuild --clean && npx eas build --profile production --platform ios"
+    "build:ios": "npx expo prebuild --clean && npx eas build --profile production --platform ios",
+    "ios": "expo run:ios"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
