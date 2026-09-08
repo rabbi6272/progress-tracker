@@ -1,15 +1,19 @@
-import { useQueries } from '@tanstack/react-query';
-import { Link } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Link } from 'expo-router';
+import { useQueries } from '@tanstack/react-query';
 
+import { useCourses } from '@/hooks/useCourses';
+import { useRoutines } from '@/hooks/useRoutines';
+import { useSemesters } from '@/hooks/useSemesters';
+import { useTargets } from '@/hooks/useTargets';
+import { useProfile } from '@/hooks/useUserProfile';
+
+import { Wrapper } from '@/components/ui/Wrapper';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { CourseCard } from '@/components/CourseCard';
 import { ThemedText } from '@/components/ThemedText';
 import { ProgressBar } from '@/components/ui/ProgressBar';
-import { useCourses } from '@/hooks/useCourses';
-import { useRoutines } from '@/hooks/useRoutines';
-import { useTargets } from '@/hooks/useTargets';
-import { useProfile } from '@/hooks/useUserProfile';
+
 import { DAY_NAMES } from '@/lib/constants';
 import { parseTime } from '@/lib/validate';
 import { useAuth } from '@/providers/auth-provider';
@@ -37,15 +41,9 @@ export default function HomeScreen() {
   const topTargets = targets.slice(0, 3);
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
+    <Wrapper style={styles.safe}>
+      <PageHeader title={`Hello, ${firstName}`} />
       <ScrollView contentContainerStyle={styles.content}>
-        <ThemedText type="title" style={styles.greeting}>
-          Hi, {firstName}
-        </ThemedText>
-        <ThemedText style={styles.subGreeting}>
-          {profileData?.currentSemesterId || 'Track your CT marks, routine, and targets.'}
-        </ThemedText>
-
         {nextClass ? (
           <View style={styles.nextClass}>
             <ThemedText style={styles.label}>NEXT CLASS</ThemedText>
@@ -96,7 +94,7 @@ export default function HomeScreen() {
           </>
         ) : null}
       </ScrollView>
-    </SafeAreaView>
+    </Wrapper>
   );
 }
 
@@ -127,7 +125,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: 20,
+    paddingVertical: 20,
   },
   greeting: {
     marginBottom: 2,

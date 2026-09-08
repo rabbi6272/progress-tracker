@@ -2,10 +2,10 @@ import { View, StyleSheet } from "react-native";
 import { ThemedText } from "../ThemedText";
 import { ExternalPathString, Link } from "expo-router";
 import { IconSymbol } from "./icon-symbol";
-import { SFSymbol } from "expo-symbols";
 import { HelloWave } from "../HelloWave";
+import { Colors } from "@/constants/theme";
 
-export function PageHeader({ title, actions, icon, helloWave }: { title: string; actions?: ExternalPathString; icon?: SFSymbol, helloWave?: boolean }) {
+export function PageHeader({ title, actions, icon, helloWave }: { title: string; actions?: ExternalPathString; icon?: any, helloWave?: boolean }) {
 	return (
 		<View style={styles.header}>
 			<ThemedText style={{ lineHeight: 36 }} type="title">
@@ -14,7 +14,7 @@ export function PageHeader({ title, actions, icon, helloWave }: { title: string;
 			</ThemedText>
 			{actions && icon && (
 				<Link href={actions} style={styles.add}>
-					<IconSymbol size={28} name={icon} />
+					<IconSymbol color={Colors.tint} size={24} name={icon} />
 				</Link>
 			)}
 		</View>

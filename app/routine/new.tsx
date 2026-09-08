@@ -10,6 +10,8 @@ import { useCourses } from '@/hooks/useCourses';
 import { useRoutines } from '@/hooks/useRoutines';
 import { DAY_NAMES, DAY_SHORT_NAMES } from '@/lib/constants';
 import { isTime, parseTime } from '@/lib/validate';
+import { Wrapper } from '@/components/ui/Wrapper';
+import { BackStep } from '@/components/ui/BackStep';
 
 export default function NewRoutineSlotScreen() {
   const router = useRouter();
@@ -51,93 +53,87 @@ export default function NewRoutineSlotScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.flex}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <ThemedText type="title" style={styles.title}>
-          New Class Slot
-        </ThemedText>
-
-        <View style={styles.section}>
-          <ThemedText type="defaultSemiBold">Day</ThemedText>
-          <View style={styles.chips}>
-            {DAY_NAMES.map((day, index) => (
-              <Chip
-                key={day}
-                label={DAY_SHORT_NAMES[index]}
-                selected={dayOfWeek === index}
-                onPress={() => setDayOfWeek(index)}
-              />
-            ))}
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <ThemedText type="defaultSemiBold">Course</ThemedText>
-          {courses.length === 0 ? (
-            <ThemedText style={styles.meta}>Add a course first to schedule classes.</ThemedText>
-          ) : (
-            <View style={styles.chips}>
-              {courses.map((c) => (
+    <>
+      <BackStep title="New Routine Slot" onBack={() => router.back()} />
+      <Wrapper noTopMargin style={styles.flex} >
+        <ScrollView keyboardShouldPersistTaps="handled">
+          <View style={styles.section}>
+            <ThemedText type="defaultSemiBold" style={{ paddingLeft: 8 }}>Day</ThemedText>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
+              {DAY_NAMES.map((day, index) => (
                 <Chip
-                  key={c.id}
-                  label={c.code}
-                  selected={courseId === c.id}
-                  onPress={() => {
-                    setCourseId(c.id);
-                    setErrors((e) => ({ ...e, courseId: null }));
-                  }}
+                  key={day}
+                  label={DAY_SHORT_NAMES[index]}
+                  selected={dayOfWeek === index}
+                  onPress={() => setDayOfWeek(index)}
                 />
               ))}
-            </View>
-          )}
-          {errors.courseId ? <Text style={styles.error}>{errors.courseId}</Text> : null}
-        </View>
+            </ScrollView>
+          </View>
 
-        <Field
-          label="Start time (HH:MM, 24h)"
-          placeholder="09:30"
-          value={startTime}
-          onChangeText={(v) => {
-            setStartTime(v);
-            setErrors((e) => ({ ...e, startTime: null }));
-          }}
-          error={errors.startTime}
-        />
-        <Field
-          label="End time (HH:MM, 24h)"
-          placeholder="10:30"
-          value={endTime}
-          onChangeText={(v) => {
-            setEndTime(v);
-            setErrors((e) => ({ ...e, endTime: null }));
-          }}
-          error={errors.endTime}
-        />
-        <Field
-          label="Room (optional)"
-          placeholder="e.g. Room 405"
-          value={room}
-          onChangeText={setRoom}
-        />
+          <View style={styles.section}>
+            <ThemedText type="defaultSemiBold" style={{ paddingLeft: 8 }}>Course</ThemedText>
+            {courses.length === 0 ? (
+              <ThemedText style={styles.meta}>Add a course first to schedule classes.</ThemedText>
+            ) : (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
+                {courses.map((c) => (
+                  <Chip
+                    key={c.id}
+                    label={c.code}
+                    selected={courseId === c.id}
+                    onPress={() => {
+                      setCourseId(c.id);
+                      setErrors((e) => ({ ...e, courseId: null }));
+                    }}
+                  />
+                ))}
+              </ScrollView>
+            )}
+            {errors.courseId ? <Text style={styles.error}>{errors.courseId}</Text> : null}
+          </View>
 
-        <Button
-          title="Save Slot"
-          onPress={handleSubmit}
-          loading={createRoutineSlot.isPending}
-        />
-      </ScrollView>
-    </KeyboardAvoidingView>
+          <Field
+            label="Start time (HH:MM, 24h)"
+            placeholder="09:30"
+            value={startTime}
+            onChangeText={(v) => {
+              setStartTime(v);
+              setErrors((e) => ({ ...e, startTime: null }));
+            }}
+            error={errors.startTime}
+          />
+          <Field
+            label="End time (HH:MM, 24h)"
+            placeholder="10:30"
+            value={endTime}
+            onChangeText={(v) => {
+              setEndTime(v);
+              setErrors((e) => ({ ...e, endTime: null }));
+            }}
+            error={errors.endTime}
+          />
+          <Field
+            label="Room (optional)"
+            placeholder="e.g. Room 405"
+            value={room}
+            onChangeText={setRoom}
+          />
+
+          <Button
+            title="Save Slot"
+            onPress={handleSubmit}
+            loading={createRoutineSlot.isPending}
+          />
+        </ScrollView>
+      </Wrapper>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   flex: {
     flex: 1,
-  },
-  container: {
-    padding: 24,
   },
   title: {
     marginBottom: 24,
@@ -147,8 +143,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   chips: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: 8,
   },
   meta: {

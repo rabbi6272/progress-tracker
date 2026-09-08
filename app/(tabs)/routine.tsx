@@ -1,7 +1,6 @@
-import { Link } from 'expo-router';
+import { ExternalPathString } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
 import { Chip } from '@/components/ui/Chip';
@@ -10,6 +9,8 @@ import { Colors } from '@/constants/theme';
 import { useRoutines } from '@/hooks/useRoutines';
 import { DAY_NAMES, DAY_SHORT_NAMES } from '@/lib/constants';
 import { parseTime } from '@/lib/validate';
+import { Wrapper } from '@/components/ui/Wrapper';
+import { PageHeader } from '@/components/ui/PageHeader';
 
 export default function RoutineScreen() {
   const { slots, isLoading, deleteRoutineSlot } = useRoutines();
@@ -29,13 +30,8 @@ export default function RoutineScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
-      <View style={styles.header}>
-        <ThemedText type="title">Routine</ThemedText>
-        <Link href="/routine/new" style={styles.add}>
-          <IconSymbol size={28} name="plus.circle.fill" color={tint} />
-        </Link>
-      </View>
+    <Wrapper style={styles.safe}>
+      <PageHeader title="Routine" actions={"/routine/new" as ExternalPathString} icon="plus.circle.fill" />
 
       <ScrollView contentContainerStyle={styles.content} horizontal showsHorizontalScrollIndicator={false}>
         <View style={styles.days}>
@@ -78,7 +74,7 @@ export default function RoutineScreen() {
           ))
         )}
       </ScrollView>
-    </SafeAreaView>
+    </Wrapper>
   );
 }
 
@@ -101,7 +97,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   content: {
-    padding: 20,
+    paddingVertical: 20,
+    height: '120%',
   },
   dayTitle: {
     marginBottom: 12,

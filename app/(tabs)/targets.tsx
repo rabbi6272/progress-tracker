@@ -1,6 +1,5 @@
-import { Link } from 'expo-router';
+import { ExternalPathString } from 'expo-router';
 import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/icon-symbol';
@@ -9,6 +8,8 @@ import { Colors } from '@/constants/theme';
 import { useTargets } from '@/hooks/useTargets';
 import { TARGET_TYPE_LABELS } from '@/lib/constants';
 import { clamp } from '@/lib/gpa';
+import { Wrapper } from '@/components/ui/Wrapper';
+import { PageHeader } from '@/components/ui/PageHeader';
 
 export default function TargetsScreen() {
   const { targets, isLoading, deleteTarget } = useTargets();
@@ -22,13 +23,8 @@ export default function TargetsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
-      <View style={styles.header}>
-        <ThemedText type="title">Targets</ThemedText>
-        <Link href="/target/new" style={styles.add}>
-          <IconSymbol size={28} name="plus.circle.fill" color={tint} />
-        </Link>
-      </View>
+    <Wrapper style={styles.safe}>
+      <PageHeader title="Targets" actions={"/target/new" as ExternalPathString} icon="plus.circle.fill" />
 
       <ScrollView contentContainerStyle={styles.content}>
         {isLoading ? (
@@ -69,7 +65,7 @@ export default function TargetsScreen() {
           })
         )}
       </ScrollView>
-    </SafeAreaView>
+    </Wrapper>
   );
 }
 
@@ -88,7 +84,7 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   content: {
-    padding: 20,
+    paddingVertical: 20,
   },
   empty: {
     alignItems: 'center',

@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/ui/Button';
@@ -10,6 +10,8 @@ import { useAssessments } from '@/hooks/useAssessments';
 import { ASSESSMENT_TYPES, ASSESSMENT_TYPE_LABELS } from '@/lib/constants';
 import type { AssessmentType } from '@/lib/types';
 import { clampMarks, isNumeric, required } from '@/lib/validate';
+import { Wrapper } from '@/components/ui/Wrapper';
+import { BackStep } from '@/components/ui/BackStep';
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -55,97 +57,89 @@ export default function NewAssessmentScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.flex}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <ThemedText type="title" style={styles.title}>
-          Add Assessment
-        </ThemedText>
+    <>
+      <BackStep title="New Assessment" onBack={() => router.back()} />
+      <Wrapper noTopMargin style={styles.flex}>
+        <ScrollView keyboardShouldPersistTaps="handled">
 
-        <View style={styles.section}>
-          <ThemedText type="defaultSemiBold">Type</ThemedText>
-          <View style={styles.chips}>
-            {ASSESSMENT_TYPES.map((t) => (
-              <Chip
-                key={t}
-                label={ASSESSMENT_TYPE_LABELS[t]}
-                selected={type === t}
-                onPress={() => setType(t)}
-              />
-            ))}
+          <View style={styles.section}>
+            <ThemedText type="defaultSemiBold" >Type</ThemedText>
+            <View style={styles.chips}>
+              {ASSESSMENT_TYPES.map((t) => (
+                <Chip
+                  key={t}
+                  label={ASSESSMENT_TYPE_LABELS[t]}
+                  selected={type === t}
+                  onPress={() => setType(t)}
+                />
+              ))}
+            </View>
           </View>
-        </View>
 
-        <Field
-          label="Name"
-          placeholder="e.g. CT-1"
-          value={name}
-          onChangeText={(v) => {
-            setName(v);
-            setErrors((e) => ({ ...e, name: null }));
-          }}
-          error={errors.name}
-        />
-        <Field
-          label="Marks obtained"
-          placeholder="e.g. 18"
-          keyboardType="numeric"
-          value={marksObtained}
-          onChangeText={(v) => {
-            setMarksObtained(v);
-            setErrors((e) => ({ ...e, marksObtained: null }));
-          }}
-          error={errors.marksObtained}
-        />
-        <Field
-          label="Max marks"
-          placeholder="e.g. 20"
-          keyboardType="numeric"
-          value={maxMarks}
-          onChangeText={(v) => {
-            setMaxMarks(v);
-            setErrors((e) => ({ ...e, maxMarks: null }));
-          }}
-          error={errors.maxMarks}
-        />
-        <Field
-          label="Weight (% of course)"
-          placeholder="e.g. 10"
-          keyboardType="numeric"
-          value={weight}
-          onChangeText={(v) => {
-            setWeight(v);
-            setErrors((e) => ({ ...e, weight: null }));
-          }}
-          error={errors.weight}
-        />
-        <Field
-          label="Date (YYYY-MM-DD)"
-          placeholder="2026-08-03"
-          value={date}
-          onChangeText={(v) => {
-            setDate(v);
-            setErrors((e) => ({ ...e, date: null }));
-          }}
-          error={errors.date}
-        />
+          <Field
+            label="Name"
+            placeholder="e.g. CT-1"
+            value={name}
+            onChangeText={(v) => {
+              setName(v);
+              setErrors((e) => ({ ...e, name: null }));
+            }}
+            error={errors.name}
+          />
+          <Field
+            label="Marks obtained"
+            placeholder="e.g. 18"
+            keyboardType="numeric"
+            value={marksObtained}
+            onChangeText={(v) => {
+              setMarksObtained(v);
+              setErrors((e) => ({ ...e, marksObtained: null }));
+            }}
+            error={errors.marksObtained}
+          />
+          <Field
+            label="Max marks"
+            placeholder="e.g. 20"
+            keyboardType="numeric"
+            value={maxMarks}
+            onChangeText={(v) => {
+              setMaxMarks(v);
+              setErrors((e) => ({ ...e, maxMarks: null }));
+            }}
+            error={errors.maxMarks}
+          />
+          <Field
+            label="Weight (% of course)"
+            placeholder="e.g. 10"
+            keyboardType="numeric"
+            value={weight}
+            onChangeText={(v) => {
+              setWeight(v);
+              setErrors((e) => ({ ...e, weight: null }));
+            }}
+            error={errors.weight}
+          />
+          <Field
+            label="Date (YYYY-MM-DD)"
+            placeholder="2026-08-03"
+            value={date}
+            onChangeText={(v) => {
+              setDate(v);
+              setErrors((e) => ({ ...e, date: null }));
+            }}
+            error={errors.date}
+          />
 
-        <Button title="Save Assessment" onPress={handleSubmit} loading={createAssessment.isPending} />
-      </ScrollView>
-    </KeyboardAvoidingView>
+          <Button title="Save Assessment" onPress={handleSubmit} loading={createAssessment.isPending} />
+        </ScrollView>
+      </Wrapper>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   flex: {
     flex: 1,
-  },
-  container: {
-    padding: 24,
-  },
-  title: {
-    marginBottom: 24,
   },
   section: {
     gap: 8,

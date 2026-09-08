@@ -7,12 +7,17 @@ import 'react-native-reanimated';
 
 import { AuthProvider, useAuth } from '@/providers/auth-provider';
 import { QueryProvider } from '@/providers/query-provider';
+import { useCourses } from '@/hooks/useCourses';
+import { useRoutines } from '@/hooks/useRoutines';
 
 void SplashScreen.preventAutoHideAsync();
 
 function RootNavigator() {
   const { user, initializing } = useAuth();
-  const [loaded, error] = useFonts({
+  const { isLoading: isCoursesLoading } = useCourses();
+  const { isLoading: isRoutinesLoading } = useRoutines();
+
+  const [loaded] = useFonts({
     'LatoRegular': require('../assets/fonts/Lato-Regular.ttf'),
     'LatoSemiBold': require('../assets/fonts/Lato-SemiBold.ttf'),
     'InterRegular': require('../assets/fonts/Inter-Regular.ttf'),
@@ -21,10 +26,10 @@ function RootNavigator() {
   });
 
   useEffect(() => {
-    if (!initializing && loaded) {
+    if (!initializing && loaded && !isCoursesLoading && !isRoutinesLoading) {
       SplashScreen.hideAsync();
     }
-  }, [initializing, loaded]);
+  }, [initializing, loaded, isCoursesLoading, isRoutinesLoading]);
 
   if (initializing || !loaded) {
     return <Stack screenOptions={{ headerShown: false }} />;

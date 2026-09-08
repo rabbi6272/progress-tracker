@@ -1,6 +1,6 @@
 import { Colors } from '@/constants/theme';
 import { useEffect, useRef } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 type ProgressBarProps = {
@@ -46,7 +46,7 @@ export function ProgressBar({ percent, color }: ProgressBarProps) {
     if (hasEntered.current) {
       progress.value = withTiming(clamped, { duration: 1000 });
     }
-  }, [clamped]);
+  }, [clamped, progress]);
 
   const fillStyle = useAnimatedStyle(() => ({
     width: `${progress.value}%`,

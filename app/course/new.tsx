@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/ui/Button';
@@ -9,6 +9,8 @@ import { Field } from '@/components/ui/InputField';
 import { useCourses } from '@/hooks/useCourses';
 import { useSemesters } from '@/hooks/useSemesters';
 import { isNumeric, required } from '@/lib/validate';
+import { Wrapper } from '@/components/ui/Wrapper';
+import { BackStep } from '@/components/ui/BackStep';
 
 export default function NewCourseScreen() {
   const router = useRouter();
@@ -47,90 +49,87 @@ export default function NewCourseScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.flex}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <ThemedText type="title" style={styles.title}>
-          New Course
-        </ThemedText>
-
-        <View style={styles.section}>
-          <ThemedText type="defaultSemiBold">Semester</ThemedText>
-          <View style={styles.chips}>
-            {semesters.map((sem) => (
-              <Chip
-                key={sem.id}
-                label={sem.name}
-                selected={semesterId === sem.id}
-                onPress={() => {
-                  setSemesterId(sem.id);
-                  setErrors((e) => ({ ...e, semesterId: null }));
-                }}
-              />
-            ))}
+    <>
+      <BackStep title="New Course" onBack={() => router.back()} />
+      <Wrapper noTopMargin style={styles.flex}>
+        <ScrollView>
+          <View style={styles.section}>
+            <ThemedText type="defaultSemiBold" style={{ paddingLeft: 8 }}>Semester</ThemedText>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
+              {semesters.map((sem) => (
+                <Chip
+                  key={sem.id}
+                  label={sem.name}
+                  selected={semesterId === sem.id}
+                  onPress={() => {
+                    setSemesterId(sem.id);
+                    setErrors((e) => ({ ...e, semesterId: null }));
+                  }}
+                />
+              ))}
+            </ScrollView>
+            {errors.semesterId && <Text style={styles.error}>{errors.semesterId}</Text>}
           </View>
-          {errors.semesterId ? <Text style={styles.error}>{errors.semesterId}</Text> : null}
-        </View>
 
-        <Field
-          label="Course code"
-          placeholder="e.g. CSE-2100"
-          autoCapitalize="characters"
-          value={code}
-          onChangeText={(v) => {
-            setCode(v);
-            setErrors((e) => ({ ...e, code: null }));
-          }}
-          error={errors.code}
-        />
-        <Field
-          label="Course title"
-          placeholder="e.g. Object Oriented Programming"
-          value={title}
-          onChangeText={(v) => {
-            setTitle(v);
-            setErrors((e) => ({ ...e, title: null }));
-          }}
-          error={errors.title}
-        />
-        <Field
-          label="Credits"
-          placeholder="e.g. 3.0"
-          keyboardType="numeric"
-          value={credits}
-          onChangeText={(v) => {
-            setCredits(v);
-            setErrors((e) => ({ ...e, credits: null }));
-          }}
-          error={errors.credits}
-        />
-        <Field
-          label="Pass marks (out of 100)"
-          placeholder="e.g. 40"
-          keyboardType="numeric"
-          value={passMarks}
-          onChangeText={(v) => {
-            setPassMarks(v);
-            setErrors((e) => ({ ...e, passMarks: null }));
-          }}
-          error={errors.passMarks}
-        />
-        <Field
-          label="CT weight (% of final grade)"
-          placeholder="e.g. 30"
-          keyboardType="numeric"
-          value={ctWeight}
-          onChangeText={(v) => {
-            setCtWeight(v);
-            setErrors((e) => ({ ...e, ctWeight: null }));
-          }}
-          error={errors.ctWeight}
-        />
+          <Field
+            label="Course code"
+            placeholder="e.g. CSE-2100"
+            autoCapitalize="characters"
+            value={code}
+            onChangeText={(v) => {
+              setCode(v);
+              setErrors((e) => ({ ...e, code: null }));
+            }}
+            error={errors.code}
+          />
+          <Field
+            label="Course title"
+            placeholder="e.g. Object Oriented Programming"
+            value={title}
+            onChangeText={(v) => {
+              setTitle(v);
+              setErrors((e) => ({ ...e, title: null }));
+            }}
+            error={errors.title}
+          />
+          <Field
+            label="Credits"
+            placeholder="e.g. 3.0"
+            keyboardType="numeric"
+            value={credits}
+            onChangeText={(v) => {
+              setCredits(v);
+              setErrors((e) => ({ ...e, credits: null }));
+            }}
+            error={errors.credits}
+          />
+          <Field
+            label="Pass marks (out of 100)"
+            placeholder="e.g. 40"
+            keyboardType="numeric"
+            value={passMarks}
+            onChangeText={(v) => {
+              setPassMarks(v);
+              setErrors((e) => ({ ...e, passMarks: null }));
+            }}
+            error={errors.passMarks}
+          />
+          <Field
+            label="CT weight (% of final grade)"
+            placeholder="e.g. 30"
+            keyboardType="numeric"
+            value={ctWeight}
+            onChangeText={(v) => {
+              setCtWeight(v);
+              setErrors((e) => ({ ...e, ctWeight: null }));
+            }}
+            error={errors.ctWeight}
+          />
 
-        <Button title="Create Course" onPress={handleSubmit} loading={createCourse.isPending} />
-      </ScrollView>
-    </KeyboardAvoidingView>
+          <Button title="Create Course" onPress={handleSubmit} loading={createCourse.isPending} />
+        </ScrollView>
+      </Wrapper>
+    </>
   );
 }
 
@@ -138,20 +137,9 @@ const styles = StyleSheet.create({
   flex: {
     flex: 1,
   },
-  container: {
-    padding: 24,
-  },
-  title: {
-    marginBottom: 24,
-  },
   section: {
     gap: 8,
     marginBottom: 16,
-  },
-  chips: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
   },
   error: {
     color: '#e5484d',

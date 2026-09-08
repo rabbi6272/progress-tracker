@@ -5,7 +5,7 @@ type ButtonProps = {
   onPress: () => void;
   loading?: boolean;
   disabled?: boolean;
-  variant?: 'primary' | 'ghost';
+  variant?: 'primary' | 'ghost' | 'destructive';
   style?: ViewStyle;
 };
 
@@ -19,7 +19,7 @@ export function Button({ title, onPress, loading, disabled, variant = 'primary',
       disabled={isDisabled}
       style={({ pressed }) => [
         styles.base,
-        variant === 'primary' ? styles.primary : styles.ghost,
+        variant === 'primary' ? styles.primary : variant === 'destructive' ? styles.destructive : styles.ghost,
         pressed && !isDisabled && styles.pressed,
         isDisabled && styles.disabled,
         style,
@@ -27,7 +27,7 @@ export function Button({ title, onPress, loading, disabled, variant = 'primary',
       {loading ? (
         <ActivityIndicator color={variant === 'primary' ? '#fff' : '#000'} />
       ) : (
-        <Text style={[styles.label, variant === 'primary' ? styles.primaryLabel : styles.ghostLabel]}>
+        <Text style={[styles.label, variant === 'primary' ? styles.primaryLabel : variant === 'destructive' ? styles.destructiveLabel : styles.ghostLabel]}>
           {title}
         </Text>
       )}
@@ -37,7 +37,7 @@ export function Button({ title, onPress, loading, disabled, variant = 'primary',
 
 const styles = StyleSheet.create({
   base: {
-    borderRadius: 10,
+    borderRadius: 50,
     paddingVertical: 10,
     paddingHorizontal: 16,
     alignItems: 'center',
@@ -45,7 +45,9 @@ const styles = StyleSheet.create({
   },
   primary: {
     backgroundColor: '#000',
-    borderRadius: 50,
+  },
+  destructive: {
+    backgroundColor: '#dc2626',
   },
   ghost: {
     backgroundColor: 'transparent',
@@ -65,5 +67,8 @@ const styles = StyleSheet.create({
   },
   ghostLabel: {
     color: '#000',
+  },
+  destructiveLabel: {
+    color: '#fff',
   },
 });

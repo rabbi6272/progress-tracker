@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Alert, Modal, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -9,22 +9,17 @@ import { useSemesters } from '@/hooks/useSemesters';
 import { useProfile } from '@/hooks/useUserProfile';
 import { useAuth } from '@/providers/auth-provider';
 import { signOut } from '@/services/Auth';
+import { useState } from 'react';
 
 export default function ProfileScreen() {
   const { user } = useAuth();
   const { profileData, isLoading } = useProfile();
   const { semesters } = useSemesters();
   const router = useRouter();
+  const [signoutModalVisible, setSignoutModalVisible] = useState(false);
 
   const currentSemester = semesters.find((s) => s.id === profileData?.currentSemesterId);
   const displayName = profileData?.fullName || 'Student';
-
-  const handleSignOut = () => {
-    Alert.alert('Sign out', 'Are you sure?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Sign Out', style: 'destructive', onPress: () => signOut() },
-    ]);
-  };
 
   if (isLoading) {
     return (
@@ -57,10 +52,37 @@ export default function ProfileScreen() {
           </View>
 
           <Button title="Edit Profile" onPress={() => router.push('/profile/edit')} />
-          <Button title="Sign Out" variant="ghost" onPress={handleSignOut} style={styles.signOut} />
-          <Button title="Back to Dashboard" variant="ghost" onPress={() => router.replace('/')} />
+          <Button title="Sign Out" variant="ghost" onPress={() => setSignoutModalVisible(true)} style={styles.signOut} />
         </View>
       </View>
+
+      <Modal visible={signoutModalVisible} backdropColor="rgba(0, 0, 0, 0.4)" animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <ThemedText type="title" style={styles.modalTitle}>
+              Sign out?
+            </ThemedText>
+            <ThemedText>
+              Are you sure you want to sign out? You will need to log in again to access your account.
+            </ThemedText>
+            <View style={styles.modalButtons}>
+              <Button title="Cancel" variant="ghost" onPress={() => setSignoutModalVisible(false)} />
+              <Button
+                title="Sign Out"
+                variant="destructive"
+                onPress={async () => {
+                  try {
+                    await signOut();
+                  } catch (error) {
+                    Alert.alert('Error', 'Failed to sign out. Please try again.');
+                  }
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
     </SafeAreaView>
   );
 }
@@ -169,19 +191,19 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   signOut: {
-    marginTop: 4,
+    marginTop: 8,
   },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
+    padding: 20,
   },
   modalContent: {
     backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 24,
+    borderRadius: 32,
+    padding: 20,
     width: '100%',
     maxWidth: 400,
   },

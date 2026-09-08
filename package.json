@@ -1,5 +1,5 @@
 {
-  "name": "progress-tracker",
+  "name": "lokkhyo",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -7,13 +7,12 @@
     "android": "expo run:android",
     "web": "expo start --web",
     "dev": "expo start -c",
-    "check:errors": "tsc --noEmit",
+    "check:errors": "tsc --noEmit && eslint . --ext .ts,.tsx",
     "build:dev": "npx expo prebuild --clean && npx eas build --profile development --platform android --local",
     "build:apk": "npx expo prebuild --clean && npx eas build --profile production --platform android --local",
     "build:android": "npx expo prebuild --clean && npx eas build --profile production --platform android",
-    "build:ios": "eas build --platform ios --profile production --auto-submit",
     "build:preview": "npx expo prebuild --clean && npx eas build --profile preview --platform android --local",
-    "ios": "expo run:ios"
+    "build:ios": "npx expo prebuild --clean && npx eas build --profile production --platform ios"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

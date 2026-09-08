@@ -1,11 +1,12 @@
 import { useQueries } from '@tanstack/react-query';
-import { Link } from 'expo-router';
+import type { ExternalPathString } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CourseCard } from '@/components/CourseCard';
 import { ThemedText } from '@/components/ThemedText';
-import { IconSymbol } from '@/components/ui/icon-symbol';
+import { Wrapper } from '@/components/ui/Wrapper';
+import { PageHeader } from '@/components/ui/PageHeader';
+
 import { useCourses } from '@/hooks/useCourses';
 import { useAuth } from '@/providers/auth-provider';
 import { listAssessments } from '@/services/Assessments';
@@ -23,13 +24,12 @@ export default function CoursesScreen() {
   });
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
-      <View style={styles.header}>
-        <ThemedText type="title">Courses</ThemedText>
-        <Link href="/course/new" style={styles.add}>
-          <IconSymbol size={28} name="plus.circle.fill" color="#0a7ea4" />
-        </Link>
-      </View>
+    <Wrapper>
+      <PageHeader
+        title="Courses"
+        actions={'/course/new' as ExternalPathString}
+        icon="plus.circle.fill"
+      />
 
       <ScrollView contentContainerStyle={styles.content}>
         {isLoading ? (
@@ -51,7 +51,7 @@ export default function CoursesScreen() {
           ))
         )}
       </ScrollView>
-    </SafeAreaView>
+    </Wrapper>
   );
 }
 
@@ -59,18 +59,8 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 8,
-  },
-  add: {
-    padding: 4,
-  },
   content: {
-    padding: 20,
+    paddingVertical: 20,
   },
   empty: {
     alignItems: 'center',

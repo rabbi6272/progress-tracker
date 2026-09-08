@@ -8,7 +8,7 @@ export function BackStep({ title, onBack }: { title: string; onBack?: () => void
 			<View style={styles.content}>
 				{onBack && (
 					<Pressable onPress={onBack} android_ripple={{ color: Colors.icon }}>
-						<IconSymbol name="arrow.left" size={26} color={Colors.text} />
+						<IconSymbol name="arrow.left" size={24} color={Colors.text} />
 					</Pressable>
 				)}
 

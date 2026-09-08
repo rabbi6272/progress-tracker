@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/ui/Button';
@@ -10,6 +10,7 @@ import { useAssessments } from '@/hooks/useAssessments';
 import { useCourses } from '@/hooks/useCourses';
 import { ASSESSMENT_TYPE_LABELS } from '@/lib/constants';
 import { courseProgress, weightedPercent } from '@/lib/gpa';
+import { Wrapper } from '@/components/ui/Wrapper';
 
 export default function CourseDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -37,13 +38,14 @@ export default function CourseDetailScreen() {
   if (!course) {
     return (
       <View style={styles.centered}>
+        <ActivityIndicator size="large" color={Colors.tint} />
         <ThemedText>Loading course…</ThemedText>
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <Wrapper style={styles.container}>
       <View style={styles.header}>
         <ThemedText type="title">{course.code}</ThemedText>
         <ThemedText style={styles.title}>{course.title}</ThemedText>
@@ -76,7 +78,7 @@ export default function CourseDetailScreen() {
         <ThemedText style={styles.empty}>No assessments yet. Add your first CT mark.</ThemedText>
       ) : (
         assessments.map((a) => (
-          <View key={a.id} style={[styles.assessment, { borderColor: tint }]}>
+          <View key={a.id} style={[styles.assessment, { borderColor: Colors.icon }]}>
             <View style={styles.assessmentRow}>
               <View style={styles.assessmentInfo}>
                 <ThemedText type="defaultSemiBold">
@@ -93,16 +95,13 @@ export default function CourseDetailScreen() {
           </View>
         ))
       )}
-    </ScrollView>
+    </Wrapper>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  content: {
-    padding: 20,
   },
   centered: {
     flex: 1,
@@ -131,8 +130,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   percent: {
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: 15,
+    fontWeight: '600',
   },
   row: {
     flexDirection: 'row',
@@ -152,6 +151,7 @@ const styles = StyleSheet.create({
   },
   assessment: {
     borderWidth: 1,
+    borderLeftWidth: 5,
     borderRadius: 12,
     padding: 14,
     marginBottom: 10,
