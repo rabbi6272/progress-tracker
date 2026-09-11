@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from '@/providers/auth-provider';
 import { QueryProvider } from '@/providers/query-provider';
 import { useCourses } from '@/hooks/useCourses';
 import { useRoutines } from '@/hooks/useRoutines';
+import { useScheduledNotifications } from '@/hooks/useScheduledNotifications';
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -16,6 +17,7 @@ function RootNavigator() {
   const { user, initializing } = useAuth();
   const { isLoading: isCoursesLoading } = useCourses();
   const { isLoading: isRoutinesLoading } = useRoutines();
+  useScheduledNotifications();
 
   const [loaded] = useFonts({
     'LatoRegular': require('../assets/fonts/Lato-Regular.ttf'),
