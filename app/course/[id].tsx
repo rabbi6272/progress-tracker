@@ -3,7 +3,6 @@ import { ActivityIndicator, Alert, Pressable, StyleSheet, View } from 'react-nat
 
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/ui/Button';
-import { IconSymbol } from '@/components/ui/icon-symbol';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Colors } from '@/constants/theme';
 import { useAssessments } from '@/hooks/useAssessments';
@@ -11,6 +10,7 @@ import { useCourses } from '@/hooks/useCourses';
 import { ASSESSMENT_TYPE_LABELS } from '@/lib/constants';
 import { courseProgress, weightedPercent } from '@/lib/gpa';
 import { Wrapper } from '@/components/ui/Wrapper';
+import { SvgIcon } from '@/components/ui/SvgIcon';
 
 export default function CourseDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -89,7 +89,7 @@ export default function CourseDetailScreen() {
                 </ThemedText>
               </View>
               <Pressable onPress={() => handleDelete(a.id, a.name)} hitSlop={8}>
-                <IconSymbol size={20} name="trash" color="#e5484d" />
+                <SvgIcon size={20} name="trash" color="#e5484d" />
               </Pressable>
             </View>
           </View>
@@ -152,9 +152,9 @@ const styles = StyleSheet.create({
   assessment: {
     borderWidth: 1,
     borderLeftWidth: 5,
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 14,
-    marginBottom: 10,
+    marginBottom: 8,
   },
   assessmentRow: {
     flexDirection: 'row',

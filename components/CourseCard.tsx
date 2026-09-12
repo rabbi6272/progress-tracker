@@ -27,12 +27,6 @@ export function CourseCard({ course, assessments = [] }: CourseCardProps) {
       <ThemedText style={styles.title} numberOfLines={1}>
         {course.title}
       </ThemedText>
-      <View style={styles.progressRow}>
-        {progress.max > 0 && <ProgressBar percent={progress.percent} />}
-        <ThemedText style={styles.percent}>
-          {progress.max > 0 ? `${progress.obtained}/${progress.max}` : 'No marks yet'}
-        </ThemedText>
-      </View>
     </Pressable>
   );
 }
@@ -41,9 +35,9 @@ const styles = StyleSheet.create({
   card: {
     borderWidth: 1,
     borderLeftWidth: 5,
-    borderRadius: 14,
+    borderRadius: 16,
     padding: 16,
-    marginBottom: 10,
+    marginBottom: 8,
   },
   pressed: {
     opacity: 0.7,
@@ -59,16 +53,5 @@ const styles = StyleSheet.create({
   },
   title: {
     opacity: 0.8,
-  },
-  progressRow: {
-    maxWidth: '60%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginTop: 2,
-  },
-  percent: {
-    fontSize: 13,
-    opacity: 0.7,
-  },
+  }
 });

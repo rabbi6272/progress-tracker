@@ -1,7 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 
-import { HapticTab } from '@/components/HapticTabBar';
 import { SvgIcon } from '@/components/ui/SvgIcon';
 import { Colors } from '@/constants/theme';
 import { Text, View } from 'react-native';
@@ -17,7 +16,6 @@ export default function TabLayout() {
           height: 80,
           paddingTop: 10,
         },
-        tabBarButton: (props) => <HapticTab {...props} />,
         tabBarLabel(props) {
           return <Text style={{ fontFamily: props.focused ? 'InterSemiBold' : 'InterMedium', fontSize: 11, color: props.color, paddingTop: 2 }}>{props.children}</Text>;
         }

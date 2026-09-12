@@ -2,7 +2,6 @@ import { ExternalPathString } from 'expo-router';
 import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
-import { IconSymbol } from '@/components/ui/icon-symbol';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Colors } from '@/constants/theme';
 import { useTargets } from '@/hooks/useTargets';
@@ -10,6 +9,7 @@ import { TARGET_TYPE_LABELS } from '@/lib/constants';
 import { clamp } from '@/lib/gpa';
 import { Wrapper } from '@/components/ui/Wrapper';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { SvgIcon } from '@/components/ui/SvgIcon';
 
 export default function TargetsScreen() {
   const { targets, isLoading, deleteTarget } = useTargets();
@@ -24,7 +24,7 @@ export default function TargetsScreen() {
 
   return (
     <Wrapper style={styles.safe}>
-      <PageHeader title="Targets" actions={"/target/new" as ExternalPathString} icon="plus.circle.fill" />
+      <PageHeader title="Targets" actions={"/target/new" as ExternalPathString} icon="circleAdd" />
 
       <ScrollView contentContainerStyle={styles.content}>
         {isLoading ? (
@@ -53,7 +53,7 @@ export default function TargetsScreen() {
                     </ThemedText>
                   </View>
                   <Pressable onPress={() => handleDelete(target.id, target.title)} hitSlop={8}>
-                    <IconSymbol size={20} name="trash" color="#e5484d" />
+                    <SvgIcon size={20} name="trash" color="#e5484d" />
                   </Pressable>
                 </View>
                 <ProgressBar percent={clamp(percent, 0, 100)} />

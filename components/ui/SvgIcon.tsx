@@ -6,6 +6,9 @@ import CoursesIcon from '@/assets/icons/courses.svg';
 import CalendarIcon from '@/assets/icons/calender.svg';
 import TargetsIcon from '@/assets/icons/targets.svg';
 import UserIcon from '@/assets/icons/user.svg';
+import ArrowLeftIcon from '@/assets/icons/arrow-left.svg';
+import CircleAddIcon from '@/assets/icons/circle-plus.svg';
+import TrashIcon from '@/assets/icons/trash.svg';
 
 const ICONS: Record<string, React.FC<SvgProps>> = {
   home: HomeIcon,
@@ -13,6 +16,9 @@ const ICONS: Record<string, React.FC<SvgProps>> = {
   calendar: CalendarIcon,
   targets: TargetsIcon,
   user: UserIcon,
+  arrowLeft: ArrowLeftIcon,
+  circleAdd: CircleAddIcon,
+  trash: TrashIcon,
 };
 
 type IconName = keyof typeof ICONS;
@@ -21,9 +27,9 @@ type SvgIconProps = {
   size?: number;
   color: string;
 } & (
-  | { name: IconName; icon?: never }
-  | { icon: React.FC<SvgProps>; name?: never }
-);
+    | { name: IconName; icon?: never }
+    | { icon: React.FC<SvgProps>; name?: never }
+  );
 
 export function SvgIcon({ size = 24, color, ...props }: SvgIconProps) {
   const Icon = 'icon' in props ? props.icon : ICONS[props.name];
